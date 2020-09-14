@@ -31,9 +31,19 @@ def morse(txt):
 		morse_txt += codes[x] + ' '
 	return morse_txt.strip()
 
+
+
 def morse_to_audio(morse):
+	letter_cnt = 0
+	out = ''
+	print()
 	for x in morse:
-		print(x, end='')
+		print(text[0:letter_cnt] + "\u001b[41m" + text[letter_cnt] + "\u001b[0m" + text[letter_cnt+1:len(text)])
+		sys.stdout.write("\u001b[1B")
+		sys.stdout.flush()
+		out += x
+		print(out)
+		sys.stdout.write("\u001b[3A")
 		sys.stdout.flush()
 		if x == '-':
 			playsound('dash2.wav')
@@ -43,7 +53,9 @@ def morse_to_audio(morse):
 			time.sleep(DOT_TIME)
 		elif x == ' ':
 			time.sleep(3*DOT_TIME)
-	print()
+			letter_cnt += 1
+	print("\u001b[2B")
+
 
 print("Enter some text to create Morse code audio:")
 text = input()
@@ -52,6 +64,8 @@ while (all(x.isalnum() or x.isspace() for x in text) != True):
 	print('Valid text is alphanumeric and spaces: ')
 	text = input()
 
+print('\033[2J')
+print('\033[H')
+
 morse_text = morse(text)
-print(morse_text)
 morse_to_audio(morse_text)
